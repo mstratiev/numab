@@ -1,5 +1,6 @@
-# numab
-npm package for parsing string numbers
+# Numab
+Number abbreviation or for short **Numab** is a simple module for parsing string numbers.
+
 
 ## Installation
 
