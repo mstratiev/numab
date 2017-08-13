@@ -4,7 +4,7 @@ module.exports = (function() {
 
     function NumabInstance(conf) {
         var configuration = {
-            separator: DEFAULT_SEPARATOR
+            separator: undefined
         };
 
         configure(conf);
@@ -19,11 +19,18 @@ module.exports = (function() {
             if (typeof(str) != 'string') {
                 str = str + '';
             }
-            var millions, thousands;
+
+            // prepare and clean the string
             var parsingString = str.toUpperCase().trim();
+
+            if (parsingString == '') {
+                // returns NaN if string is empty or was composed only of spaces
+                return NaN;
+            }
+            var millions, thousands;
             var results = 0;
 
-            // SWITCH FOR PARSING
+            // preparse
             switch (true) {
                 case (parsingString.indexOf('M') > -1):
                     millions = true;
@@ -34,11 +41,15 @@ module.exports = (function() {
             }
 
             // replace separator with new custom one
-            if (configuration.separator !== DEFAULT_SEPARATOR) {
+            if (configuration.separator) {
+                if (parsingString.indexOf(DEFAULT_SEPARATOR) > -1 &&
+                    parsingString.indexOf(configuration.separator) < 0) {
+                    return NaN;
+                }
                 parsingString = parsingString.replace(configuration.separator, DEFAULT_SEPARATOR);
             }
 
-            // PARSE STRING NUMBER
+            // parse string number
             var tempArr;
             if (millions) {
                 tempArr = parsingString.split('M');
@@ -53,19 +64,26 @@ module.exports = (function() {
         };
 
         /**
+         * Configures the Numab instance.
          * Accepts options object { separator : {string} }.
-         * @param {any} options Configuration object for the numab.
+         * @param {any} conf Configuration object for the numab.
          */
         function configure(conf) {
-            if (conf && conf.separator) {
+            if (conf) {
                 configuration.separator = conf.separator;
             }
         };
 
+        /**
+         * Creates a separate instance of Numab.
+         * @param {*} conf configuration options to pass to the new instance.
+         */
+        function createInstance(conf) {
+            return new NumabInstance(conf);
+        }
+
         return {
-            createInstance: function(conf) {
-                return new NumabInstance(conf);
-            },
+            createInstance: createInstance,
             parse: parse,
             config: configure
         };

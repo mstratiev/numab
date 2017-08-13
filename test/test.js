@@ -11,32 +11,48 @@ describe('numab', function() {
             assert.ok(numab.createInstance());
         });
 
-        it('should return a number', function() {
+        it('should return a number when passed "2" (string number) ', function() {
             var actual = numab.parse('2');
             assert(typeof(actual) == 'number');
         });
 
-        it('should return NaN', function() {
-            assert(Number.isNaN(numab.parse("a")));
+        it('should return NaN when passed anything else than a number-like string', function() {
+            assert(isNaN(numab.parse(''), 'empty string'));
+            assert(isNaN(numab.parse('  '), 'spaces'));
+            assert(isNaN(numab.parse('a'), 'simple string'));
+            assert(isNaN(numab.parse('a k'), 'string containing abbr character'));
+            assert(isNaN(numab.parse({}), 'object'));
         });
 
     });
 
     describe('default separator .', function() {
-        it('should return 250', function() {
+        it('should return 250 when passes "0.25k"', function() {
+            assert.equal(numab.parse('0.25k'), 250);
+        });
+
+        it('should return 250 when passed "0.25 K"', function() {
+            assert.equal(numab.parse('0.25k'), 250);
+        });
+
+        it('should return 250 when passed " 0.25   K"', function() {
             assert.equal(numab.parse('0.25k'), 250);
         });
     });
 
     describe('custom separator ,,', function() {
-        var num = require('../index');
+        var num = numab.createInstance();
         num.config({ separator: ',,' });
 
-        it('should return 250', function() {
+        it('should return 250 when passed "0,,25k"', function() {
             assert.equal(num.parse('0,,25k'), 250);
         });
 
-        it('should return NaN', function() {
+        it('should return 2000 when passed "2000"', function() {
+            assert.equal(num.parse('2000'), 2000);
+        });
+
+        it('should return NaN when passed default separator', function() {
             assert(Number.isNaN(num.parse('2.5k')));
         });
 
@@ -45,6 +61,23 @@ describe('numab', function() {
             i.config({ separator: ",," });
             var actual = i.parse('2,,5k');
             assert.equal(actual, 2500);
+        });
+    });
+
+    describe('custom separator ..', function() {
+        var num = numab.createInstance();
+        num.config({ separator: '..' });
+
+        it('should return 250 when passed "0..25k"', function() {
+            assert.equal(num.parse('0..25k'), 250);
+        });
+
+        it('should return 2000 when passed "2000"', function() {
+            assert.equal(num.parse('2000'), 2000);
+        });
+
+        it('should return NaN when passed default separator', function() {
+            assert(Number.isNaN(num.parse('2.5k')));
         });
     });
 
@@ -57,5 +90,9 @@ describe('numab', function() {
             assert.equal(actualInstance, expected);
             assert.equal(actualInstance, actualGlobal);
         });
-    })
+    });
+
+    function isNaN(a) {
+        return Number.isNaN(a);
+    }
 });

@@ -1,6 +1,6 @@
 {
     "name": "numab",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "description": "A package that allows the conversion between string abbreviations of numbers to actual numbers.",
     "main": "index.js",
     "repository": {
