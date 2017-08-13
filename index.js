@@ -2,64 +2,74 @@ module.exports = (function() {
 
     var DEFAULT_SEPARATOR = '.';
 
-    var configuration = {
-        separator: DEFAULT_SEPARATOR
-    };
+    function NumabInstance(conf) {
+        var configuration = {
+            separator: DEFAULT_SEPARATOR
+        };
 
-    /**
-     * Converts a string representation of a number e.g. 2,3k to a number value 2300.
-     * @param {string} str 
-     * @return {number}
-     */
-    var parse = function(str) {
-        if (typeof(str) != 'string') {
-            str = str + '';
-        }
-        var millions, thousands;
-        var parsingString = str.toUpperCase().trim();
-        var results = 0;
+        configure(conf);
 
-        // SWITCH FOR PARSING
-        switch (true) {
-            case (parsingString.indexOf('M') > -1):
-                millions = true;
-                break;
-            case (parsingString.indexOf('K') > -1):
-                thousands = true;
-                break;
-        }
+        /**
+         * Converts a string representation of a number.
+         * e.g. 2,3k to a number value 2300.
+         * @param {string} str 
+         * @return {number}
+         */
+        function parse(str) {
+            if (typeof(str) != 'string') {
+                str = str + '';
+            }
+            var millions, thousands;
+            var parsingString = str.toUpperCase().trim();
+            var results = 0;
 
-        // replace separator with new custom one
-        if (configuration.separator !== DEFAULT_SEPARATOR) {
-            parsingString = parsingString.replace(configuration.separator, DEFAULT_SEPARATOR);
-        }
+            // SWITCH FOR PARSING
+            switch (true) {
+                case (parsingString.indexOf('M') > -1):
+                    millions = true;
+                    break;
+                case (parsingString.indexOf('K') > -1):
+                    thousands = true;
+                    break;
+            }
 
-        // PARSE STRING NUMBER
-        var tempArr;
-        if (millions) {
-            tempArr = parsingString.split('M');
-            results = tempArr[0] * 1000000;
-        } else if (thousands) {
-            tempArr = parsingString.split('K');
-            results = tempArr[0] * 1000;
-        } else {
-            results = str * 1;
-        }
-        return results;
-    };
+            // replace separator with new custom one
+            if (configuration.separator !== DEFAULT_SEPARATOR) {
+                parsingString = parsingString.replace(configuration.separator, DEFAULT_SEPARATOR);
+            }
 
-    /**
-     * Accepts options object { separator : {string} }.
-     * @param {any} options Configuration object for the numab.
-     */
-    var configure = function(conf) {
-        if (conf && conf.separator) {
-            configuration.separator = conf.separator;
-        }
-    };
+            // PARSE STRING NUMBER
+            var tempArr;
+            if (millions) {
+                tempArr = parsingString.split('M');
+                results = tempArr[0] * 1000000;
+            } else if (thousands) {
+                tempArr = parsingString.split('K');
+                results = tempArr[0] * 1000;
+            } else {
+                results = str * 1;
+            }
+            return results;
+        };
 
-    return {
-        parse: parse,
-        config: configure
-    };
+        /**
+         * Accepts options object { separator : {string} }.
+         * @param {any} options Configuration object for the numab.
+         */
+        function configure(conf) {
+            if (conf && conf.separator) {
+                configuration.separator = conf.separator;
+            }
+        };
+
+        return {
+            createInstance: function(conf) {
+                return new NumabInstance(conf);
+            },
+            parse: parse,
+            config: configure
+        };
+    }
+
+    return new NumabInstance();
 })();
