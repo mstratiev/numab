@@ -1,15 +1,31 @@
 {
     "name": "numab",
-    "version": "0.0.1",
+    "version": "0.0.12",
     "description": "A package that allows the conversion between string abbreviations of numbers to actual numbers.",
     "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/mstratiev/numab.git"
+    },
+    "homepage": "https://github.com/mstratiev/numab.git",
+    "files": [
+        "index.js"
+    ],
+    "keywords": [
+        "number",
+        "parse",
+        "string"
+    ],
     "directories": {
         "test": "test"
     },
     "scripts": {
         "test": "mocha"
     },
-    "author": "martin.stratiev@gmail.com",
+    "author": {
+        "name": "Martin Stratiev",
+        "email": "martin.stratiev@gmail.com"
+    },
     "license": "MIT",
     "devDependencies": {
         "mocha": "^3.5.0"
