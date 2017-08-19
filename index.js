@@ -140,8 +140,3 @@ module.exports = (function() {
 
     return new NumabInstance();
 })();
-
-
-a = module.exports.parse('   ');
-
-console.log(a)
